@@ -1,24 +1,9 @@
 #include "rational.hpp"
 
-/*
-class Rational{
-    public:
-        Rational operator+(Rational a);
-        Rational operator-(Rational a);
-        Rational operator*(Rational a);
-        Rational operator/(Rational a);
-        long int data();
-        long int numer();
-        long int denom();
-        void cleanup();
-        double dec_est();
-    private:
-        long int numerator;
-        long int denominator;
-};*/
-
 std::vector<long int> prime_fact(long int a){
     std::vector<long int> res;
+    
+    a = (a < 0 ? -a : a);
     
     int i = 2;
     while(i <= a){
@@ -32,8 +17,17 @@ std::vector<long int> prime_fact(long int a){
     return res;
 }
 
+bool isprime(long a){
+    if(prime_fact(a).size() == 1)
+        return true;
+    return false;
+}
+
 long int gcf(int a, int b){
     std::vector<long int> pf_a = prime_fact((long) a), pf_b = prime_fact((long) b);
+    
+    a = (a < 0 ? -a : a);
+    b = (b < 0 ? -b : b);
     
     long prime_fact = 1;
 
@@ -56,10 +50,24 @@ long int gcf(int a, int b){
 
 Rational::Rational(int n, int d){
     numerator = n;
-    if(denominator == 0)
+    if(d == 0)
         throw std::invalid_argument("Denominator cannot be set to 0!\n");
     denominator = d;
+    cleanup();
 }
+
+Rational::Rational(double n, double d){
+    
+}
+
+Rational::Rational(double r){
+    
+}
+
+Rational::Rational(std::string str){
+    
+}
+
 
 long int Rational::numer(){
     return numerator;
@@ -69,7 +77,29 @@ long int Rational::denom(){
     return denominator;
 }
 
+void Rational::cleanup(){
+    if(denominator == 0){
+        throw std::invalid_argument("Denominator have value equal to 0!\n");
+        return;
+    }
+    
+    if(denominator < 0){
+        denominator *= -1;
+        numerator *= -1;
+    }
+    
+    long gfact = gcf(numerator, denominator);
+    
+    numerator /= gfact;
+    denominator /= gfact;
+    return;
+}
+
+std::string Rational::tostr(){
+    return std::to_string(numerator) + (denominator == 1 ? "" : ("/" + std::to_string(denominator)));
+}
+
 Rational Rational::operator+(Rational a){
-    Rational res(this->numerator * a.denominator + a.numerator * this->denominator, a.denominator * this->denominator);
+    Rational res((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
     return res;
 }
