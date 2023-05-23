@@ -1,9 +1,9 @@
+#ifndef RATIONAL_HPP
+#define RATIONAL_HPP
+
 #include <iostream>
 #include <stdexcept>
 #include <vector>
-
-#ifndef RATIONAL_HPP
-#define RATIONAL_HPP
 
 std::vector<long int> prime_fact(long int a);
 long int gcf(int a, int b);
