@@ -4,10 +4,14 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include <string>
+#include <algorithm>
+
 
 bool isprime(long a);
 std::vector<long int> prime_fact(long int a);
 long int gcf(int a, int b);
+double parse_frac(std::string str);
 
 class Rational{
     public:
@@ -21,10 +25,11 @@ class Rational{
         Rational operator/(Rational a);
         long int numer();
         long int denom();
-        void cleanup();
         std::string tostr();
-        double dec_est();
+        
+        double approx();
     private:
+        void cleanup();
         long int numerator;
         long int denominator;
 };
