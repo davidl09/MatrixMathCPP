@@ -1,10 +1,12 @@
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 
 #ifndef RATIONAL_HPP
 #define RATIONAL_HPP
 
-long int gcf();
+std::vector<long int> prime_fact(long int a);
+long int gcf(int a, int b);
 
 class Rational{
     public:
