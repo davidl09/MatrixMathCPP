@@ -99,6 +99,37 @@ std::string Rational::tostr(){
     return std::to_string(numerator) + (denominator == 1 ? "" : ("/" + std::to_string(denominator)));
 }
 
+double Rational::approx(){
+    return (double)numerator/(double)denominator;
+}
+
+double parse_frac(std::string str){ //does not work with brackets yet
+    //check validity
+    std::string symbols("0123456789+-*/");
+    for(char& c : str){
+        if(symbols.find(c) == std::string::npos){ //if this char is not in list of valid symbols
+            throw std::invalid_argument("String could not be parsed, check input\n"); //then throw exception
+        }
+    }
+    if(str.find('/') != std::string::npos){
+        return parse_frac(str.substr(str.begin(), str.find("/"))) / parse_frac(str.substr(str.find("/"), str.length()));
+//error here
+    }/*
+    if(str.contains('*')){
+        return parse_frac(str.substr(str.begin(), str.find("*"))) * parse_frac(str.substr(str.find("*"), str.length()));
+    }
+    if(str.contains('-') || str.contains('+')){
+        return parse_frac(str.substr(str.begin(), str.find((str.find('+') < str.find('-') ? '+' : '-')))) * parse_frac(str.substr(str.find((str.find('+') < str.find('-') ? '+' : '-')), str.length()));
+        (str.find('+') < str.find('-') ? '+' : '-')
+    }*/
+    for(char &c : str){
+        if(symbols.substr(symbols.begin(), 10).find(c) == std::string::npos){
+            throw std::invalid_argument("");
+        }
+    }
+    return (double)std::stod(str);
+}
+
 Rational Rational::operator+(Rational a){
     Rational res((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
     return res;
