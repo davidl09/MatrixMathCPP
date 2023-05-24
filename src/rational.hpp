@@ -8,6 +8,9 @@
 #include <algorithm>
 
 
+bool is_operator(char& c);
+bool is_valid_mstr(std::string& str);
+int str_charcount(std::string str, char c); 
 bool isprime(long a);
 std::vector<long int> prime_fact(long int a);
 long int gcf(int a, int b);

@@ -1,4 +1,42 @@
 #include "rational.hpp"
+#include <stdexcept>
+
+int str_charcount(std::string str, char c){
+    int count = 0;
+    for (char& ch : str) {
+        if(c == ch){
+            count++;
+        }
+    }
+    return count;
+}
+
+bool is_operator(char& c){
+    std::string symbols("+-*/");
+    return symbols.find(c) != std::string::npos;
+}
+
+bool is_valid_mstr(std::string& str){
+    //check validity
+    std::string symbols("0123456789+-*/.");
+    for(char& c : str){
+        if(symbols.find(c) == std::string::npos){ //if this char is not in list of valid symbols
+            throw std::invalid_argument("String could not be parsed, check input\n"); //then throw exception
+        }
+    }
+
+    for(int i = 0; i < str.length(); ++i){
+        if(is_operator(str[i])){
+            if(i == 0 || i == str.length() - 1){ //check these first to avoid out of bounds array access
+                throw std::invalid_argument("Input operator syntax error\n");
+            }
+            if(is_operator(str[i - 1]) || is_operator(str[i + 1])){
+                throw std::invalid_argument("Input operator syntax error\n");
+            }
+        }
+    }
+    return true;
+}
 
 std::vector<long int> prime_fact(long int a){
     std::vector<long int> res;
@@ -104,30 +142,26 @@ double Rational::approx(){
 }
 
 double parse_frac(std::string str){ //does not work with brackets yet
-    //check validity
-    std::string symbols("0123456789+-*/");
-    for(char& c : str){
-        if(symbols.find(c) == std::string::npos){ //if this char is not in list of valid symbols
-            throw std::invalid_argument("String could not be parsed, check input\n"); //then throw exception
+
+    if(!is_valid_mstr(str))
+        return 0; //modify later
+
+    if(str.find('/') != std::string::npos || str.find('*') != std::string::npos){
+        if(str.find('/') < str.find('*')){
+            return parse_frac(str.substr(0, str.find("/"))) / parse_frac(str.substr(str.find("/") + 1, str.length()));
+        }else{
+            return parse_frac(str.substr(0, str.find("*"))) * parse_frac(str.substr(str.find("*") + 1, str.length()));
         }
     }
-    if(str.find('/') != std::string::npos){
-        return parse_frac(str.substr(str.begin(), str.find("/"))) / parse_frac(str.substr(str.find("/"), str.length()));
-//error here
-    }/*
-    if(str.contains('*')){
-        return parse_frac(str.substr(str.begin(), str.find("*"))) * parse_frac(str.substr(str.find("*"), str.length()));
-    }
-    if(str.contains('-') || str.contains('+')){
-        return parse_frac(str.substr(str.begin(), str.find((str.find('+') < str.find('-') ? '+' : '-')))) * parse_frac(str.substr(str.find((str.find('+') < str.find('-') ? '+' : '-')), str.length()));
-        (str.find('+') < str.find('-') ? '+' : '-')
-    }*/
-    for(char &c : str){
-        if(symbols.substr(symbols.begin(), 10).find(c) == std::string::npos){
-            throw std::invalid_argument("");
+    if(str.find('-') != std::string::npos || str.find('+') != std::string::npos){
+        if(str.find('+') < str.find('-')){
+            return parse_frac(str.substr(0, str.find("+"))) + parse_frac(str.substr(str.find("+") + 1, str.length()));
+        }else{
+            return parse_frac(str.substr(0, str.find("-"))) - parse_frac(str.substr(str.find("-") + 1, str.length()));
         }
+        
     }
-    return (double)std::stod(str);
+    return std::stod(str);
 }
 
 Rational Rational::operator+(Rational a){
