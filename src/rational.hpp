@@ -6,7 +6,8 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-
+#include <cmath>
+#include <stdlib.h>
 
 bool is_operator(char& c);
 bool is_valid_mstr(std::string& str);

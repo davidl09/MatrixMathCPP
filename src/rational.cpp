@@ -95,15 +95,25 @@ Rational::Rational(int n, int d){
 }
 
 Rational::Rational(double n, double d){
-    
+    Rational(n/d);
 }
 
 Rational::Rational(double r){
-    
-}
+    long long num, den;
+    long gcd;
+    num = std::round(r * 1e5);
+    den = std::round(1e5);
+    while(num%10 == 0){
+        num/=10;
+        den/=10;
+    }
+    gcd = gcf(num, den);
+    numerator = num/gcd;
+    denominator = den/gcd;
+}  
 
 Rational::Rational(std::string str){
-    
+    Rational(parse_frac(str));
 }
 
 
