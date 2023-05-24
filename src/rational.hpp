@@ -10,6 +10,10 @@
 #include <stdlib.h>
 
 bool is_operator(char& c);
+bool b_parity(std::string& str);
+bool is_bracket(char& c);
+size_t match_bracket(std::string& str, size_t index);
+std::vector<size_t> open_bracket_groups(std::string& str);
 bool is_valid_mstr(std::string& str);
 int str_charcount(std::string str, char c); 
 bool isprime(long a);

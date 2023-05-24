@@ -1,5 +1,5 @@
 #include "rational.hpp"
-#include <stdexcept>
+
 
 int str_charcount(std::string str, char c){
     int count = 0;
@@ -16,23 +16,77 @@ bool is_operator(char& c){
     return symbols.find(c) != std::string::npos;
 }
 
+bool is_bracket(char& c){
+    return c == '(' || c == ')';
+}
+
+bool b_parity(std::string& str){
+    int brackets = 0;
+    for(char& c : str){
+        (c == '(' ? ++brackets : (c == ')' ? --brackets : brackets));
+    }
+    return brackets == 0;
+}
+
+size_t match_bracket(std::string& str, size_t index){ //assumes bracket parity is given
+    
+    size_t brackets = 1; //first bracket already counted
+    if(str[index] == '('){
+        for(int i = index + 1; i < str.size(); ++i){
+            (str[i] == '(' ? ++brackets : (str[i] == ')' ? --brackets : brackets)); //change bracket count
+            if(brackets == 0) //if match found return index
+                return i;
+        }
+        return std::string::npos;
+    }
+    if(str[index] == ')'){
+        for(int i = index - 1; i >= 0; --i){
+            (str[i] == ')' ? ++brackets : (str[i] == '(' ? --brackets : brackets)); //change bracket count
+            if(brackets == 0) //if match found return index
+                return i;
+        }
+        return std::string::npos;
+    }
+    return std::string::npos;
+}
+
+std::vector<size_t> open_bracket_groups(std::string& str){ //assumes bracket parity is given
+    size_t index = 0;
+    std::vector<size_t> res;
+    while(index < str.size()){
+        while(str[index] != '(' && index < str.size()){
+            ++index;
+        }
+        if(index < str.size())
+            res.push_back(index);
+        index = match_bracket(str, index); //jump to paired closing bracket
+    }
+    return res;
+}
+
 bool is_valid_mstr(std::string& str){
     //check validity
-    std::string symbols("0123456789+-*/.");
+    std::string symbols("0123456789+-*/.()");
     for(char& c : str){
         if(symbols.find(c) == std::string::npos){ //if this char is not in list of valid symbols
-            throw std::invalid_argument("String could not be parsed, check input\n"); //then throw exception
+            return false;
         }
     }
 
+    if(!b_parity(str))
+        return false;
+
     for(int i = 0; i < str.length(); ++i){
         if(is_operator(str[i])){
-            if(i == 0 || i == str.length() - 1){ //check these first to avoid out of bounds array access
-                throw std::invalid_argument("Input operator syntax error\n");
+            if(i == 0 || i == str.length() - 1){ //check these conditions first to avoid out of bounds array access; checks mismatched operators
+                return false;
             }
-            if(is_operator(str[i - 1]) || is_operator(str[i + 1])){
-                throw std::invalid_argument("Input operator syntax error\n");
+            if(is_operator(str[i - 1]) || is_operator(str[i + 1])){ //check mismatched operators
+                return false;
             }
+        }
+        if(is_bracket(str[i]) && match_bracket(str, i) == std::string::npos){ //check mismatched brackets
+            return false;
         }
     }
     return true;
@@ -153,23 +207,46 @@ double Rational::approx(){
 
 double parse_frac(std::string str){ //does not work with brackets yet
 
+    //remove whitespaces
+    for(std::string::iterator i = str.begin(); i < str.end(); ++i){
+        if(*i == ' ')
+            str.erase(i);
+    }
     if(!is_valid_mstr(str))
-        return 0; //modify later
+        return 0; 
+    
+    if(str.find('(') != std::string::npos){
+        std::vector<size_t> g  = open_bracket_groups(str); //vector containing indices of opening brackets for outermost bracket groups
+        std::string nstr;
+        int close_bracket;
+        if((g.size()) != 0){ //if input contains brackets. no need to check bracket parity since is_valid_mstr does so above
+            nstr.append(str.substr(0, g[0]));
+            for (int i = 0; i < g.size(); ++i) {
+                close_bracket = match_bracket(str, g[i]);
+                nstr.append(std::to_string(parse_frac(str.substr(g[i] + 1, close_bracket - g[i] - 1))));
+                for (int i = close_bracket + 1; str[i] != '(' && i < str.length(); ++i) {
+                    nstr.push_back(str[i]);
+                }
+            }
+            return parse_frac(nstr);
+        }
+    }
 
     if(str.find('/') != std::string::npos || str.find('*') != std::string::npos){
         if(str.find('/') < str.find('*')){
-            return parse_frac(str.substr(0, str.find("/"))) / parse_frac(str.substr(str.find("/") + 1, str.length()));
+            return parse_frac(str.substr(0, str.find("/"))) / parse_frac(str.substr(str.find("/") + 1, str.length()));// */ operators
         }else{
             return parse_frac(str.substr(0, str.find("*"))) * parse_frac(str.substr(str.find("*") + 1, str.length()));
         }
     }
+
     if(str.find('-') != std::string::npos || str.find('+') != std::string::npos){
         if(str.find('+') < str.find('-')){
-            return parse_frac(str.substr(0, str.find("+"))) + parse_frac(str.substr(str.find("+") + 1, str.length()));
+            return parse_frac(str.substr(0, str.find("+"))) + parse_frac(str.substr(str.find("+") + 1, str.length()));// +- operators
         }else{
             return parse_frac(str.substr(0, str.find("-"))) - parse_frac(str.substr(str.find("-") + 1, str.length()));
         }
-        
+    
     }
     return std::stod(str);
 }
