@@ -1,20 +1,9 @@
 #include "rational.hpp"
-#include <string>
+#include "parsing.hpp"
 
 int main(){
+    std::string temp;
+    std::cin >> temp;
+    Algebra::ShuntingYard op(temp);
     
-    /*
-    Rational a(3, 2);
-    Rational b(4, 5);
-    Rational c = a + b;
-
-    std::cout << c.numer() << "/" << c.denom() << std::endl;
-    std::cout << gcf(24, 18) << std::endl;*/
-    std::string str;
-    while(true){
-        std::getline(std::cin, str);
-        std::cout << parse_frac(str) << std::endl;
-    }
-    
-
 }
