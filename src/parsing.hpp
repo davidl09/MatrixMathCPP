@@ -12,7 +12,7 @@ namespace Algebra{
         public:
             ShuntingYard(std::string expr);
             void compute();
-            double returnRes();
+            std::string returnRes();
         private:
             static bool is_operator(char& c);
             static bool is_bracket(char& c);
@@ -26,7 +26,7 @@ namespace Algebra{
             std::vector<std::string> out;
     };
 
-    bool b_parity(std::string& str);
+
     size_t match_bracket(std::string& str, size_t index);
     std::vector<size_t> open_bracket_groups(std::string& str);
     int str_charcount(std::string str, char c); 

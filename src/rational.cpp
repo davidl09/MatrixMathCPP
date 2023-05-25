@@ -76,10 +76,6 @@ Rational::Rational(double r){
     denominator = den/gcd;
 }  
 
-Rational::Rational(std::string str){
-    Rational(Algebra::parse_frac(str));
-}
-
 
 long int Rational::numer(){
     return numerator;

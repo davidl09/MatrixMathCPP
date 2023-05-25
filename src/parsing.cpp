@@ -1,6 +1,7 @@
 #include "parsing.hpp"
 #include <float.h>
 #include <initializer_list>
+#include <iostream>
 #include <stdexcept>
 
 namespace Algebra{
@@ -14,17 +15,24 @@ namespace Algebra{
         if(expr.length() == 0)
             throw std::invalid_argument("Empty argument to parsing constructor\n");
 
-        else if(is_valid_mstr(expr)){
+        for(auto it = expr.begin(); it < expr.end(); ++it){
+            if(*it == ' ')
+                expr.erase(it);
+        }
+
+        std::cout << "input: " << expr << std::endl;
+
+        if(is_valid_mstr(expr)){
             std::string temp;
             std::string::iterator it = expr.begin();
             while(it < expr.end()){
-                if(ops.find(*it) != std::string::npos || brackets.find(*it) != std::string::npos){
+                if(is_operator(*it) || is_bracket(*it)){ //put operators/brackets into a single token
                     temp.push_back(*it);
                     input.push_back(temp);
                     temp.erase();
                     ++it;
                 }else{
-                    while(nums.find(*it) != std::string::npos && it < expr.end()){
+                    while(nums.find(*it) != std::string::npos && it < expr.end()){ //put decimal numbers into one token
                         temp.push_back(*it);
                         ++it;
                     }
@@ -38,7 +46,6 @@ namespace Algebra{
 
 
     int ShuntingYard::op_prec(std::string str){ //numbers: 0, +-: 1,  */: 2, (): 3,
-
         switch (str.length()) {
             case 1:
                 if(str[0] == ops[0] || str[0] == ops[1])
@@ -65,9 +72,6 @@ namespace Algebra{
             }
         }
 
-        if(!b_parity(str))
-            return false;
-
         for(int i = 0; i < str.length(); ++i){
             if(is_operator(str[i])){
                 if(i == 0 || i == str.length() - 1){ //check these conditions first to avoid out of bounds array access; checks mismatched operators
@@ -85,11 +89,20 @@ namespace Algebra{
     }
 
     void ShuntingYard::compute(){
-        //1. convert to rpn
+        toRPN();
+    }
 
+    std::string ShuntingYard::returnRes(){
+        std::string temp;
+        for(std::string str : out){
+            temp.append(str);
+        }
+        return temp;
     }
 
     void ShuntingYard::toRPN(){
+        for(auto it = input.begin(); it < input.end(); ++it)
+            std::cout << *it << "  " << std::endl;
         for(std::string& str : input){
             if(is_operator(str[0]) || is_bracket(str[0]))
                 op_stack_push(str);
@@ -99,31 +112,32 @@ namespace Algebra{
             out.push_back(stack.back()); //pop items from operator stack to output
             stack.pop_back();
         }
+        return;
     }
 
-    void ShuntingYard::op_stack_push(std::string str){ //to be finished
-        if(stack.size() == 0){
-            stack.push_back(str);
-            return;
-        }
+    void ShuntingYard::op_stack_push(std::string str){ //expects only operator/brackets arguments
         if(is_operator(str[0])){
             while(op_prec(stack.back()) >= op_prec(str)){
+                std::cout << "stack: " << stack[0] << std::endl;
                 out.push_back(stack.back());
-                stack.pop_back();
+                stack.pop_back();//error here
             }
             stack.push_back(str);
             return;
         }
         if(str[0] == '('){
             stack.push_back(str);
+            return;
         }
         if(str[0] == ')'){
             while(stack.back()[0] != '('){
-                out.push_back(stack.back());
+                out.push_back(stack.back()); //while '(' not found, push operators to output
                 stack.pop_back();
             }
+            stack.pop_back(); //discard ')' and '('
             return;
         }
+        throw std::invalid_argument("Error in string passed to shunting yard algorithm\n");
 
     }
 
@@ -184,21 +198,13 @@ namespace Algebra{
     }
 
     bool ShuntingYard::is_operator(char& c){
-        std::string symbols("+-*/");
-        return symbols.find(c) != std::string::npos;
+        return ops.find(c) != std::string::npos;
     }
 
     bool ShuntingYard::is_bracket(char& c){
         return c == '(' || c == ')';
     }
 
-    bool b_parity(std::string& str){
-        int brackets = 0;
-        for(char& c : str){
-            (c == '(' ? ++brackets : (c == ')' ? --brackets : brackets));
-        }
-        return brackets == 0;
-    }
 
     size_t match_bracket(std::string& str, size_t index){ //assumes bracket parity is given
         

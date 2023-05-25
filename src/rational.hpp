@@ -16,7 +16,6 @@ class Rational{
         Rational(int n, int d);
         Rational(double n, double d);
         Rational(double r);
-        Rational(std::string str);
         Rational operator+(Rational a);
         Rational operator-(Rational a);
         Rational operator*(Rational a);
