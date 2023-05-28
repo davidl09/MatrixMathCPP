@@ -3,6 +3,7 @@ build/
 .cache/
 *.cmake
 CMakeFiles/
+bin/
 
 # Prerequisites
 *.d

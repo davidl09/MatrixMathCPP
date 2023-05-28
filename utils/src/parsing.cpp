@@ -1,8 +1,5 @@
 #include "parsing.hpp"
-#include <float.h>
-#include <initializer_list>
-#include <iostream>
-#include <stdexcept>
+
 
 namespace Algebra{
 
