@@ -17,8 +17,6 @@ namespace Algebra{
                 expr.erase(it);
         }
 
-        std::cout << "input: " << expr << std::endl;
-
         if(is_valid_mstr(expr)){
             std::string temp;
             std::string::iterator it = expr.begin();
@@ -109,7 +107,6 @@ namespace Algebra{
         ShuntingStack shunt;
 
         for(std::string& str : input){
-            std::cout << "Pushing " << str << std::endl;
             shunt.push_stack(str);
         }
         out = shunt.result();
