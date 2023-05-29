@@ -32,7 +32,6 @@ namespace Algebra{
     bool isprime(long a);
     std::vector<long int> prime_fact(long int a);
     long int gcf(int a, int b);
-    double parse_frac(std::string str);
     size_t next_op(std::string& str, size_t index);
 }
 
