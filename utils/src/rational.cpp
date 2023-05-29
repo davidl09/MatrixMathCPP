@@ -120,7 +120,7 @@ Rational Rational::operator+(long a){
 }
 
 Rational Rational::operator-(Rational a){
-    return Rational((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
+    return Rational((int)(this->numerator * a.denominator - a.numerator * this->denominator), (int)(a.denominator * this->denominator));
 }
     
 Rational Rational::operator-(long a){

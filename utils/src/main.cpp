@@ -4,7 +4,7 @@
 int main(){
     
     Rational a(3,4), b(5, 7);
-    Rational c = a + b;
+    Rational c = b - a;
     std::cout << c.tostr();
     
 }
