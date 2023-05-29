@@ -87,7 +87,7 @@ long int Rational::denom(){
 
 void Rational::cleanup(){
     if(denominator == 0){
-        throw std::invalid_argument("Denominator have value equal to 0!\n");
+        throw std::invalid_argument("Denominator cannot have has value equal to 0!\n");
         return;
     }
     
@@ -112,18 +112,31 @@ double Rational::approx(){
 }
 
 Rational Rational::operator+(Rational a){
-    Rational res((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
-    return res;
+    return Rational((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
 }
 
 Rational Rational::operator+(long a){
-    Rational res((int)(this->numerator + a * this->denominator), this->denominator);
-    return res;
+    return Rational((int)(this->numerator + a * this->denominator), this->denominator);
 }
 
 Rational Rational::operator-(Rational a){
-    Rational res((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
-    return res;
+    return Rational((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
 }
     
+Rational Rational::operator-(long a){
+    return Rational((int)(this->numerator - a * this->denominator), this->denominator);
+}
 
+Rational Rational::operator*(Rational a){
+    return Rational((int)(this->numerator * a.numer()), (int)(this->denominator * a.denom()));
+}
+
+//** more operator overloads **
+
+void Rational::invert(){
+    if(numerator == 0)
+        throw std::invalid_argument("Cannot invert fraction that has value 0\n");
+    long temp = numerator;
+    numerator = denominator;
+    denominator = temp;
+}

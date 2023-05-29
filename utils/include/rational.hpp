@@ -19,12 +19,15 @@ class Rational{
         Rational operator+(Rational a);
         Rational operator+(long a);
         Rational operator-(Rational a);
+        Rational operator-(long a);
         Rational operator*(Rational a);
         Rational operator/(Rational a);
+        Rational inverse();
         long int numer();
         long int denom();
         std::string tostr();
         double approx();
+        void invert();
 
     private:
         void cleanup();

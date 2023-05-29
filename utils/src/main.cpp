@@ -3,10 +3,8 @@
 
 int main(){
     
-    std::string temp;
-    std:: cin >> temp;
-    Algebra::ShuntingYard op(temp);
-    op.compute();
-    std::cout << op.returnRes() << std::endl;
+    Rational a(3,4), b(5, 7);
+    Rational c = a + b;
+    std::cout << c.tostr();
     
 }
