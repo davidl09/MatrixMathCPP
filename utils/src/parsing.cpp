@@ -42,15 +42,15 @@ namespace Algebra{
     }
 
 
-    int ShuntingYard::op_prec(std::string str){ //numbers: 0, +-: 1,  */: 2, (): 3,
+    int op_prec(std::string str){ //numbers: 0, +-: 1,  */: 2, (): 3,
         switch (str.length()) {
             case 1:
                 if(str[0] == ops[0] || str[0] == ops[1])
                     return 1;
                 if(str[0] == ops[2] || str[0] == ops[3])
                     return 2;
-                if(is_bracket(str[0]))
-                    return 3;
+                if(ShuntingYard::is_bracket(str[0]))
+                    return 0;
             default:
                 for(char& c : str){
                     if(nums.find(c) != std::string::npos)
@@ -85,6 +85,14 @@ namespace Algebra{
         return true;
     }
 
+    bool ShuntingYard::is_operator(char& c){
+        return ops.find(c) != std::string::npos;
+    }
+
+    bool ShuntingYard::is_bracket(char& c){
+        return c == '(' || c == ')';
+    }
+
     void ShuntingYard::compute(){
         toRPN();
     }
@@ -98,91 +106,59 @@ namespace Algebra{
     }
 
     void ShuntingYard::toRPN(){
-        for(auto it = input.begin(); it < input.end(); ++it)
-            std::cout << *it << "  " << std::endl;
+        ShuntingStack shunt;
+
         for(std::string& str : input){
-            if(is_operator(str[0]) || is_bracket(str[0]))
-                op_stack_push(str);
-            else out.push_back(str); //if number push straight to output stack
+            std::cout << "Pushing " << str << std::endl;
+            shunt.push_stack(str);
         }
-        for(std::vector<std::string>::iterator it = stack.end() - 1; it >= stack.begin(); --it){
-            out.push_back(stack.back()); //pop items from operator stack to output
-            stack.pop_back();
-        }
-        return;
+        out = shunt.result();
+
     }
 
-    void ShuntingYard::op_stack_push(std::string str){ //expects only operator/brackets arguments
-        if(is_operator(str[0])){
-            while(op_prec(stack.back()) >= op_prec(str)){
-                std::cout << "stack: " << stack[0] << std::endl;
-                out.push_back(stack.back());
-                stack.pop_back();//error here
-            }
-            stack.push_back(str);
-            return;
-        }
-        if(str[0] == '('){
-            stack.push_back(str);
-            return;
-        }
-        if(str[0] == ')'){
-            while(stack.back()[0] != '('){
-                out.push_back(stack.back()); //while '(' not found, push operators to output
+    //******
+
+    bool ShuntingStack::is_empty(){
+        return stack.size() == 0;
+    }
+
+    void ShuntingStack::push_stack(std::string str){
+        if(str.length() == 0){
+            throw std::invalid_argument("Empty string passed to shunting yard algorithm\n");
+        }if(ShuntingYard::is_operator(str[0])){
+            while(!is_empty() && ShuntingYard::is_operator(stack.back()[0]) && op_prec(stack.back()) >= op_prec(str)){
+                output.push_back(stack.back());
                 stack.pop_back();
             }
-            stack.pop_back(); //discard ')' and '('
+            stack.push_back(str);
             return;
+        }if(ShuntingYard::is_bracket(str[0])){
+            switch(str[0]){
+                case '(':
+                    stack.push_back(str);
+                    return;
+                case ')':
+                    while(stack.back() != "("){
+                        if(is_empty())
+                            throw std::invalid_argument("Mismatched brackets");
+                        output.push_back(stack.back());
+                        stack.pop_back();
+                    }stack.pop_back(); //discard left bracket
+                    return;
+            }
         }
-        throw std::invalid_argument("Error in string passed to shunting yard algorithm\n");
-
+        output.push_back(str);
     }
 
-    /*    double parse_frac(std::string str){ //broken
+    std::vector<std::string> ShuntingStack::result(){
+        while(!is_empty()){
+            output.push_back(stack.back());
+            stack.pop_back();
+        }
+        return output;
+    }
 
-        //remove whitespaces
-        for(std::string::iterator i = str.begin(); i < str.end(); ++i){
-            if(*i == ' ')
-                str.erase(i);
-        }
-        //if(!ShuntingYard::is_valid_mstr(str))
-            return 0; 
-        
-        if(str.find('(') != std::string::npos){
-            std::vector<size_t> g  = open_bracket_groups(str); //vector containing indices of opening brackets for outermost bracket groups
-            std::string nstr;
-            int close_bracket;
-            if((g.size()) != 0){ //if input contains brackets. no need to check bracket parity since is_valid_mstr does so above
-                nstr.append(str.substr(0, g[0]));
-                for (int i = 0; i < g.size(); ++i) {
-                    close_bracket = match_bracket(str, g[i]);
-                    nstr.append(std::to_string(parse_frac(str.substr(g[i] + 1, close_bracket - g[i] - 1))));
-                    for (int i = close_bracket + 1; str[i] != '(' && i < str.length(); ++i) {
-                        nstr.push_back(str[i]);
-                    }
-                }
-                return parse_frac(nstr);
-            }
-        }
-
-        if(str.find('/') != std::string::npos || str.find('*') != std::string::npos){
-            if(str.find('/') < str.find('*')){
-                return parse_frac(str.substr(0, str.find("/"))) / parse_frac(str.substr(str.find("/") + 1, next_op(str, str.find('/')) - str.find('/') + 1));// operators
-            }else{
-                return parse_frac(str.substr(0, str.find("*"))) * parse_frac(str.substr(str.find("*") + 1, next_op(str, str.find('*')) - str.find('*') + 1));
-            }
-        }
-
-        else if(str.find('-') != std::string::npos || str.find('+') != std::string::npos){
-            if(str.find('+') < str.find('-')){
-                return parse_frac(str.substr(0, str.find("+"))) + parse_frac(str.substr(str.find("+") + 1, str.length()));// +- operators
-            }else{
-                return parse_frac(str.substr(0, str.find("-"))) - parse_frac(str.substr(str.find("-") + 1, str.length()));
-            }
-        
-        }
-        return std::stod(str);
-    }*/
+    //*****
 
     int str_charcount(std::string str, char c){
         int count = 0;
@@ -194,14 +170,7 @@ namespace Algebra{
         return count;
     }
 
-    bool ShuntingYard::is_operator(char& c){
-        return ops.find(c) != std::string::npos;
-    }
-
-    bool ShuntingYard::is_bracket(char& c){
-        return c == '(' || c == ')';
-    }
-
+    
 
     size_t match_bracket(std::string& str, size_t index){ //assumes bracket parity is given
         

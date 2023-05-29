@@ -116,3 +116,14 @@ Rational Rational::operator+(Rational a){
     return res;
 }
 
+Rational Rational::operator+(long a){
+    Rational res((int)(this->numerator + a * this->denominator), this->denominator);
+    return res;
+}
+
+Rational Rational::operator-(Rational a){
+    Rational res((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
+    return res;
+}
+    
+

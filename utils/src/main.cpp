@@ -2,8 +2,9 @@
 #include "parsing.hpp"
 
 int main(){
+    
     std::string temp;
-    std::cin >> temp;
+    std:: cin >> temp;
     Algebra::ShuntingYard op(temp);
     op.compute();
     std::cout << op.returnRes() << std::endl;

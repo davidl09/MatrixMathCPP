@@ -17,6 +17,7 @@ class Rational{
         Rational(double n, double d);
         Rational(double r);
         Rational operator+(Rational a);
+        Rational operator+(long a);
         Rational operator-(Rational a);
         Rational operator*(Rational a);
         Rational operator/(Rational a);
