@@ -1,0 +1,207 @@
+/*
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution
+{
+public:
+  static bool is_operator (string & token)
+  {
+    string ops ("+-*/");
+    if (token.length () != 0 && ops.find (token[0]) != std::string::npos)
+      {
+	return true;
+      }
+    return false;
+  }
+  static bool is_operator (char &token)
+  {
+    string ops ("+-*/");
+    if (ops.find (token) != std::string::npos)
+      {
+	return true;
+      }
+    return false;
+  }
+public:
+  static int evalRPN (vector < string > &tokens)
+  {
+
+    vector < int >res;
+    for (auto it = tokens.begin (); it != tokens.end (); ++it)
+      {
+	if (!is_operator (*it))
+	  {
+	    res.push_back (std::stoi (*it));
+	  }
+	else if (res.size () >= 2)
+	  {
+	    switch ((*it)[0])
+	      {
+	      case '/':
+		res[res.size () - 2] /= res[res.size () - 1];
+		res.pop_back ();
+		break;
+	      case '*':
+		res[res.size () - 2] *= res[res.size () - 1];
+		res.pop_back ();
+		break;
+	      case '-':
+		res[res.size () - 2] -= res[res.size () - 1];
+		res.pop_back ();
+		break;
+	      case '+':
+		res[res.size () - 2] += res[res.size () - 1];
+		res.pop_back ();
+		break;
+	      }
+	  }
+      }
+    return res[0];
+  }
+};
+
+class ShuntYard
+{
+public:
+  void push_token (string & str)
+  {
+
+    if (Solution::is_operator (str))
+      {
+	while (stack.size () > 0 && op_prec (stack.back ()) >= op_prec (str))
+	  {
+	    output.push_back (stack.back ());
+	    stack.pop_back ();
+	  }
+	stack.push_back (str);
+	return;
+      }
+
+    if (is_bracket (str))
+      {
+	switch (str[0])
+	  {
+	  case '(':
+	    stack.push_back (str);
+	    return;
+	  case ')':
+	    while (stack.size () > 0)
+	      {
+		if (stack.back () != "(")
+		  {
+		    output.push_back (stack.back ());
+		    stack.pop_back ();
+		    if (stack.size () == 0)
+		      {
+			throw invalid_argument ("Mismatched brackets\n");
+		      }
+		  }
+		else
+		  {
+		    stack.pop_back ();
+		    return;
+		  }
+	      }
+	  }
+      }
+      else{
+          output.push_back(str);
+      }
+      
+    
+  }
+
+  vector < string > result ()
+  {
+    while (stack.size () != 0)
+      {
+	output.push_back (stack.back ());
+	stack.pop_back ();
+      }
+    return output;
+  }
+
+
+private:
+  vector < string > stack;
+  vector < string > output;
+public:
+  static vector < string > tokenize (string & str)
+  {
+    vector < string > res;
+    string temp;
+  for (char &c : str)
+      {
+	if(Solution::is_operator(c) || is_bracket(c)){
+	    if(temp.length() != 0){
+	        res.push_back(temp);
+	        temp.erase();
+	    }
+	    temp.push_back(c);
+	    res.push_back(temp);
+	    temp.erase();
+	}
+	else{
+	    temp.push_back(c);
+	}
+      }
+    res.push_back (temp);
+
+    return res;
+  }
+
+  static int op_prec (string & str)
+  {
+    if (str == "+" || str == "-")
+      return 1;
+    if (str == "*" || str == "/")
+      return 2;
+    return 0;
+  }
+
+  static int op_prec (char &c)
+  {
+    if (c == '+' || c == '-')
+      return 1;
+    if (c == '*' || c == '/')
+      return 2;
+    return 0;
+  }
+
+  static bool is_bracket (string & str)
+  {
+    return (str == "(" || str == ")");
+  }
+
+  static bool is_bracket (char &c)
+  {
+    return (c == '(' || c == ')');
+  }
+};
+
+int
+main ()
+{
+  ShuntYard shunt;
+  Solution sol;
+
+  string tok ("2+40-3/5");
+  vector < string > res = ShuntYard::tokenize (tok);
+for (string& s:res)
+    {
+      shunt.push_token(s);
+    }
+
+
+vector < string > outp = shunt.result();
+ 
+for (auto v : outp){
+    cout << v << " ";
+}
+    
+}
+*/
