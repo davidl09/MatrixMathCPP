@@ -9,30 +9,33 @@
 #include <cmath>
 #include <stdlib.h>
 
+namespace LinAlg{
 
-class Rational{
-    
-    public:
-        Rational(int n, int d);
-        Rational(double n, double d);
-        Rational(double r);
-        Rational operator+(Rational a);
-        Rational operator+(long a);
-        Rational operator-(Rational a);
-        Rational operator-(long a);
-        Rational operator*(Rational a);
-        Rational operator/(Rational a);
-        Rational inverse();
-        long int numer();
-        long int denom();
-        std::string tostr();
-        double approx();
-        void invert();
+    class Rational{
+        
+        public:
+            Rational(int n, int d);
+            Rational(double n, double d);
+            Rational(double r);
+            Rational operator+(Rational a);
+            Rational operator+(long a);
+            Rational operator-(Rational a);
+            Rational operator-(long a);
+            Rational operator*(Rational a);
+            Rational operator/(Rational a);
+            Rational inverse();
+            long int numer();
+            long int denom();
+            std::string tostr();
+            double approx();
+            void invert();
 
-    private:
-        void cleanup();
-        long int numerator;
-        long int denominator;
-};
+        private:
+            void cleanup();
+            long int numerator;
+            long int denominator;
+    };
+
+}
 
 #endif

@@ -50,7 +50,7 @@ long int gcf(int a, int b){
 
 }
 
-Rational::Rational(int n, int d){
+LinAlg::Rational::Rational(int n, int d){
     numerator = n;
     if(d == 0)
         throw std::invalid_argument("Denominator cannot be set to 0!\n");
@@ -58,11 +58,11 @@ Rational::Rational(int n, int d){
     cleanup();
 }
 
-Rational::Rational(double n, double d){
+LinAlg::Rational::Rational(double n, double d){
     Rational(n/d);
 }
 
-Rational::Rational(double r){
+LinAlg::Rational::Rational(double r){
     long long num, den;
     long gcd;
     num = std::round(r * 1e5);
@@ -77,15 +77,15 @@ Rational::Rational(double r){
 }  
 
 
-long int Rational::numer(){
+long int LinAlg::Rational::numer(){
     return numerator;
 }
 
-long int Rational::denom(){
+long int LinAlg::Rational::denom(){
     return denominator;
 }
 
-void Rational::cleanup(){
+void LinAlg::Rational::cleanup(){
     if(denominator == 0){
         throw std::invalid_argument("Denominator cannot have has value equal to 0!\n");
         return;
@@ -103,37 +103,37 @@ void Rational::cleanup(){
     return;
 }
 
-std::string Rational::tostr(){
+std::string LinAlg::Rational::tostr(){
     return std::to_string(numerator) + (denominator == 1 ? "" : ("/" + std::to_string(denominator)));
 }
 
-double Rational::approx(){
+double LinAlg::Rational::approx(){
     return (double)numerator/(double)denominator;
 }
 
-Rational Rational::operator+(Rational a){
+LinAlg::Rational LinAlg::Rational::operator+(LinAlg::Rational a){
     return Rational((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
 }
 
-Rational Rational::operator+(long a){
+LinAlg::Rational LinAlg::Rational::operator+(long a){
     return Rational((int)(this->numerator + a * this->denominator), this->denominator);
 }
 
-Rational Rational::operator-(Rational a){
+LinAlg::Rational LinAlg::Rational::operator-(LinAlg::Rational a){
     return Rational((int)(this->numerator * a.denominator - a.numerator * this->denominator), (int)(a.denominator * this->denominator));
 }
     
-Rational Rational::operator-(long a){
+LinAlg::Rational LinAlg::Rational::operator-(long a){
     return Rational((int)(this->numerator - a * this->denominator), this->denominator);
 }
 
-Rational Rational::operator*(Rational a){
+LinAlg::Rational LinAlg::Rational::operator*(LinAlg::Rational a){
     return Rational((int)(this->numerator * a.numer()), (int)(this->denominator * a.denom()));
 }
 
 //** more operator overloads **
 
-void Rational::invert(){
+void LinAlg::Rational::invert(){
     if(numerator == 0)
         throw std::invalid_argument("Cannot invert fraction that has value 0\n");
     long temp = numerator;
