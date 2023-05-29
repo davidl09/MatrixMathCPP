@@ -2,6 +2,52 @@
 
 
 namespace Algebra{
+    
+    /*
+    **RPN evaluator, add to class ShuntingYard**
+    <begin>
+class Solution {
+    private:
+        static bool is_operator(string &token){
+            string ops("+-*/");
+            if(token.length() != 0 && ops.find(token[0]) != std::string::npos){
+                return true;
+            }return false;
+        }
+       public:
+        static int evalRPN(vector<string>& tokens) {
+            
+            vector<int> res;
+            for(auto it = tokens.begin(); it != tokens.end(); ++it){
+                if(!is_operator(*it)){
+                    res.push_back(std::stoi(*it));
+                }else if(res.size() >= 2){
+                    switch((*it)[0]){
+                        case '/':
+                            res[res.size() - 2] /= res[res.size() - 1];
+                            res.pop_back(); 
+                            break;
+                        case '*':
+                            res[res.size() - 2] *= res[res.size() - 1];
+                            res.pop_back(); 
+                            break;
+                        case '-':
+                            res[res.size() - 2] -= res[res.size() - 1];
+                            res.pop_back();
+                            break;
+                        case '+':
+                            res[res.size() - 2] += res[res.size() - 1];
+                            res.pop_back();
+                            break;
+                    }
+                }
+            }
+            return res[0];
+        }
+    };
+
+    <end>
+    */
 
     const std::string  brackets = "()";
     const std::string  ops = "+-*/";
