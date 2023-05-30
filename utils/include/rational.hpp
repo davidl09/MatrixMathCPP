@@ -9,6 +9,7 @@
 #include <cmath>
 #include <stdlib.h>
 
+
 namespace LinAlg{
 
     class Rational{
@@ -17,12 +18,25 @@ namespace LinAlg{
             Rational(int n, int d);
             Rational(double n, double d);
             Rational(double r);
+            Rational(std::string str);
+            Rational();
             Rational operator+(Rational a);
             Rational operator+(long a);
             Rational operator-(Rational a);
             Rational operator-(long a);
             Rational operator*(Rational a);
+            Rational operator*(long a);
             Rational operator/(Rational a);
+            Rational operator/(long a);
+            Rational& operator+=(Rational a);
+            Rational& operator+=(long a);
+            Rational& operator -=(Rational a);
+            Rational& operator -=(long a);
+            Rational& operator*=(Rational a);
+            Rational& operator*=(long a);
+            Rational& operator/=(Rational a);
+            Rational& operator/=(long a);
+
             Rational inverse();
             long int numer();
             long int denom();
@@ -36,6 +50,9 @@ namespace LinAlg{
             long int denominator;
     };
 
+    bool isprime(long a);
+    std::vector<long int> prime_fact(long int a);
+    long int gcf(int a, int b);
 }
 
 #endif

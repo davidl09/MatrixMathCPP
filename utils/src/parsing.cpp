@@ -1,53 +1,8 @@
 #include "parsing.hpp"
+#include "rational.hpp"
 
 
-namespace Algebra{
-    
-    /*
-    **RPN evaluator, add to class ShuntingYard**
-    <begin>
-class Solution {
-    private:
-        static bool is_operator(string &token){
-            string ops("+-*/");
-            if(token.length() != 0 && ops.find(token[0]) != std::string::npos){
-                return true;
-            }return false;
-        }
-       public:
-        static int evalRPN(vector<string>& tokens) {
-            
-            vector<int> res;
-            for(auto it = tokens.begin(); it != tokens.end(); ++it){
-                if(!is_operator(*it)){
-                    res.push_back(std::stoi(*it));
-                }else if(res.size() >= 2){
-                    switch((*it)[0]){
-                        case '/':
-                            res[res.size() - 2] /= res[res.size() - 1];
-                            res.pop_back(); 
-                            break;
-                        case '*':
-                            res[res.size() - 2] *= res[res.size() - 1];
-                            res.pop_back(); 
-                            break;
-                        case '-':
-                            res[res.size() - 2] -= res[res.size() - 1];
-                            res.pop_back();
-                            break;
-                        case '+':
-                            res[res.size() - 2] += res[res.size() - 1];
-                            res.pop_back();
-                            break;
-                    }
-                }
-            }
-            return res[0];
-        }
-    };
-
-    <end>
-    */
+namespace Parsing{
 
     const std::string  brackets = "()";
     const std::string  ops = "+-*/";
@@ -68,6 +23,12 @@ class Solution {
             std::string::iterator it = expr.begin();
             while(it < expr.end()){
                 if(is_operator(*it) || is_bracket(*it)){ //put operators/brackets into a single token
+                    if(*it == '-'){
+                        if(it == expr.begin() || is_operator(*(it - 1))){ //if '-' is unary minus and not subtraction
+                            temp.push_back(*it);
+                            it++;
+                        }
+                    }
                     temp.push_back(*it);
                     input.push_back(temp);
                     temp.erase();
@@ -115,7 +76,7 @@ class Solution {
 
         for(int i = 0; i < str.length(); ++i){
             if(is_operator(str[i])){
-                if(i == 0 || i == str.length() - 1){ //check these conditions first to avoid out of bounds array access; checks mismatched operators
+                if(i == str.length() - 1){ //check these conditions first to avoid out of bounds array access; checks mismatched operators
                     return false;
                 }
                 if(is_operator(str[i - 1]) || is_operator(str[i + 1])){ //check mismatched operators
@@ -139,14 +100,7 @@ class Solution {
 
     void ShuntingYard::compute(){
         toRPN();
-    }
-
-    std::string ShuntingYard::returnRes(){
-        std::string temp;
-        for(std::string str : out){
-            temp.append(str);
-        }
-        return temp;
+        evaluate();
     }
 
     void ShuntingYard::toRPN(){
@@ -159,6 +113,61 @@ class Solution {
 
     }
 
+    void ShuntingYard::evaluate(){
+        std::vector<LinAlg::Rational> retval;
+
+        for(auto it = out.begin(); it != out.end(); ++it){
+            if(!is_operator((*it).back())) //evaluate last element since unary minus would break this
+                if(str_charcount(*it, '.') == 1){
+                    LinAlg::Rational temp_rat(std::stod(*it), 1.0);
+                    retval.push_back(temp_rat);
+                }
+                else {
+                    LinAlg::Rational temp_rat(std::stoi(*it), 1);
+                    retval.push_back(temp_rat);
+                }
+            else if(retval.size() >= 2){ 
+
+                switch((*it)[0]){
+                    case '/':
+                            retval[retval.size() - 2] /= retval[retval.size() - 1];
+                            retval.pop_back(); 
+                            break;
+                        case '*':
+                            retval[retval.size() - 2] *= retval[retval.size() - 1];
+                            retval.pop_back(); 
+                            break;
+                        case '-':
+                            retval[retval.size() - 2] -= retval[retval.size() - 1];
+                            retval.pop_back();
+                            break;
+                        case '+':
+                            retval[retval.size() - 2] += retval[retval.size() - 1];
+                            retval.pop_back();
+                            break;
+                        default:
+                            throw std::invalid_argument("Unknown symbol encountered\n");
+                }
+
+            }else{
+                throw std::invalid_argument("Misformed expression, parsing failed\n");
+            }
+        }   
+        value = retval[0];
+    }
+
+    LinAlg::Rational ShuntingYard::getResult(){
+        return value;
+    }
+
+    std::string ShuntingYard::getResult_s(){
+        return value.tostr();
+    }
+
+    double ShuntingYard::getResult_lf(){
+        return value.approx();
+    }
+
     //******
 
     bool ShuntingStack::is_empty(){
@@ -168,7 +177,7 @@ class Solution {
     void ShuntingStack::push_stack(std::string str){
         if(str.length() == 0){
             throw std::invalid_argument("Empty string passed to shunting yard algorithm\n");
-        }if(ShuntingYard::is_operator(str[0])){
+        }if(ShuntingYard::is_operator(str.back())){
             while(!is_empty() && ShuntingYard::is_operator(stack.back()[0]) && op_prec(stack.back()) >= op_prec(str)){
                 output.push_back(stack.back());
                 stack.pop_back();
@@ -177,18 +186,24 @@ class Solution {
             return;
         }if(ShuntingYard::is_bracket(str[0])){
             switch(str[0]){
+
                 case '(':
                     stack.push_back(str);
                     return;
+
                 case ')':
                     while(stack.back() != "("){
+
                         if(is_empty())
                             throw std::invalid_argument("Mismatched brackets");
                         output.push_back(stack.back());
                         stack.pop_back();
-                    }stack.pop_back(); //discard left bracket
-                    return;
+
+                    }
+                    stack.pop_back();
+
             }
+            return;
         }
         output.push_back(str);
     }
@@ -249,15 +264,5 @@ class Solution {
             index = match_bracket(str, index); //jump to paired closing bracket
         }
         return res;
-    }
-
-    size_t next_op(std::string& str, size_t index){
-        std::string operators("+-*/)");
-        if(str[index] == '/' || str[index] == '+'){
-            do{
-                ++index;
-            }while(operators.find(str[index]) != std::string::npos);
-        }
-        return --index;
     }
 }

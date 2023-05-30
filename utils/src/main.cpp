@@ -1,10 +1,9 @@
 #include "rational.hpp"
 #include "parsing.hpp"
+#include "tests.hpp"
 
 int main(){
-    
-    Rational a(3,4), b(5, 7);
-    Rational c = b - a;
-    std::cout << c.tostr();
-    
+    Tests::Constructors();
+    //Tests::Parsing();
+    //Tests::DecimalParsing();
 }
