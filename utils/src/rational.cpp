@@ -61,7 +61,19 @@ namespace LinAlg{
     }
 
     Rational::Rational(double n, double d){
-        Rational(n/d);
+        double r = n/d;
+        long long num, den;
+        long gcd;
+        num = std::round(r * 1e5);
+        den = std::round(1e5);
+        while(num%10 == 0){
+            num/=10;
+            den/=10;
+        }
+        gcd = gcf(num, den);
+        numerator = num/gcd;
+        denominator = den/gcd;
+        
     }
 
     Rational::Rational(double r){

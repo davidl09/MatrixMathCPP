@@ -4,6 +4,6 @@
 
 int main(){
     Tests::Constructors();
-    //Tests::Parsing();
-    //Tests::DecimalParsing();
+    Tests::Parsing();
+    Tests::DecimalParsing(); // all tests passed
 }

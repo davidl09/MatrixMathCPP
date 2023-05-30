@@ -6,7 +6,7 @@ namespace Tests{
         //std::cout << LinAlg::Rational(4, 3).tostr() << std::endl; //works
         //std::cout << LinAlg::Rational(7).tostr() << std::endl; //works
         //std::cout << LinAlg::Rational(0.56).tostr() << std::endl; //works
-        std::cout << LinAlg::Rational((double)3.45, (double)5.2).tostr() << std::endl; //works
+        std::cout << LinAlg::Rational((double)3.45, (double)5.2).tostr() << std::endl; //all constructor tests passed, note: do not call constructor from within constructor
         std::cout << LinAlg::Rational(-7.0/5).tostr() << std::endl; //...
         std::cout << LinAlg::Rational("-7/5").tostr() << std::endl;
         std::cout << LinAlg::Rational("8/9 + 2/18").tostr() << std::endl;
