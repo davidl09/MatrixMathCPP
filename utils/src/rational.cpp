@@ -60,9 +60,14 @@ namespace LinAlg{
         cleanup();
     }
 
-    Rational::Rational(double n, double d){
+    Rational::Rational(double n, double d){ //works, needs more testing
+        Rational a(n), b(d);        //--> constructor for Rational from single double retains accuracy (no truncation)
+
+        a /= b; //Rational /= retains accuracy
+        *this = a;
+        /***               
         double r = n/d;
-        long long num, den;
+        long long num, den;          //<-- gives inaccurate results
         long gcd;
         num = std::round(r * 1e5);
         den = std::round(1e5);
@@ -73,7 +78,7 @@ namespace LinAlg{
         gcd = gcf(num, den);
         numerator = num/gcd;
         denominator = den/gcd;
-        
+        */
     }
 
     Rational::Rational(double r){
