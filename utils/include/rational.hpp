@@ -15,6 +15,7 @@ namespace LinAlg{
     class Rational{
         
         public:
+            Rational();
             Rational(int n, int d);
             Rational(double n, double d);
             Rational(double r);

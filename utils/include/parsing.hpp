@@ -43,6 +43,8 @@ namespace Parsing{
     std::vector<size_t> open_bracket_groups(std::string& str);
     int op_prec(std::string str);
     int str_charcount(std::string str, char c); 
+
+    LinAlg::Rational str_to_rational(const std::string& str);
     
 }
 

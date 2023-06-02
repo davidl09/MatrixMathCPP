@@ -4,6 +4,13 @@
 
 namespace Parsing{
 
+
+        LinAlg::Rational str_to_rational(const std::string& str){
+            ShuntingYard shunt(str);
+            shunt.compute();
+            return shunt.getResult();
+        }
+
     const std::string  brackets = "()";
     const std::string  ops = "+-*/";
     const std::string nums = "0123456789.";
@@ -130,23 +137,23 @@ namespace Parsing{
 
                 switch((*it)[0]){
                     case '/':
-                            retval[retval.size() - 2] /= retval[retval.size() - 1];
-                            retval.pop_back(); 
-                            break;
-                        case '*':
-                            retval[retval.size() - 2] *= retval[retval.size() - 1];
-                            retval.pop_back(); 
-                            break;
-                        case '-':
-                            retval[retval.size() - 2] -= retval[retval.size() - 1];
-                            retval.pop_back();
-                            break;
-                        case '+':
-                            retval[retval.size() - 2] += retval[retval.size() - 1];
-                            retval.pop_back();
-                            break;
-                        default:
-                            throw std::invalid_argument("Unknown symbol encountered\n");
+                        retval[retval.size() - 2] /= retval[retval.size() - 1];
+                        retval.pop_back(); 
+                        break;
+                    case '*':
+                        retval[retval.size() - 2] *= retval[retval.size() - 1];
+                        retval.pop_back(); 
+                        break;
+                    case '-':
+                        retval[retval.size() - 2] -= retval[retval.size() - 1];
+                        retval.pop_back();
+                        break;
+                    case '+':
+                        retval[retval.size() - 2] += retval[retval.size() - 1];
+                        retval.pop_back();
+                        break;
+                    default:
+                        throw std::invalid_argument("Unknown symbol encountered\n");
                 }
 
             }else{

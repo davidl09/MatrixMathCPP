@@ -52,6 +52,11 @@ namespace LinAlg{
 
     }
 
+    Rational::Rational(){
+        numerator = 0;
+        denominator = 1;
+    }
+
     Rational::Rational(int n, int d){
         numerator = n;
         if(d == 0)
