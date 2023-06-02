@@ -17,8 +17,6 @@ int main(){
         catch(...){
             std::cout << "That was not valid input, please try again" << std::endl;
         }
-            
-
     }
 
 

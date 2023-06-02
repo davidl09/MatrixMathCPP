@@ -91,13 +91,7 @@ namespace LinAlg{
         long gcd;
         num = std::round(r * 1e5);
         den = std::round(1e5);
-        while(num%10 == 0){
-            num/=10;
-            den/=10;
-        }
-        gcd = gcf(num, den);
-        numerator = num/gcd;
-        denominator = den/gcd;
+        this->cleanup();
     }  
 
     Rational::Rational(std::string str){
@@ -105,12 +99,6 @@ namespace LinAlg{
         shunt.compute();
         *this = shunt.getResult();
     }
-
-    Rational::Rational(){
-        numerator = 0;
-        denominator = 1;
-    }
-
 
     long int Rational::numer(){
         return numerator;
@@ -129,6 +117,11 @@ namespace LinAlg{
         if(denominator < 0){
             denominator *= -1;
             numerator *= -1;
+        }
+
+        while(numerator % 10 == 0 && denominator % 10 == 0){
+            numerator /= 10;
+            denominator /= 10;
         }
         
         long gfact = gcf(numerator, denominator);
