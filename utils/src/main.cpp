@@ -8,9 +8,8 @@ int main(){
     LinAlg::Rational num;
     while(true){
         try{
-            std::cout << "Type in an expression to evaluate" << std::endl;
-            std::cin >> temp;
-            std::cin.ignore();
+            std::cout << "Type in an expression to evaluate\n" << std::endl;
+            std::getline(std::cin, temp);
             num = Parsing::str_to_rational(temp);
             std::cout << temp << " = " << num.tostr() << " , or approx. " << num.approx() << std::endl;
         }
