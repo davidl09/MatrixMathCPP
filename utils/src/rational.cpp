@@ -91,6 +91,8 @@ namespace LinAlg{
         long gcd;
         num = std::round(r * 1e5);
         den = std::round(1e5);
+        numerator = num;
+        denominator = den;
         this->cleanup();
     }  
 
@@ -111,6 +113,11 @@ namespace LinAlg{
     void Rational::cleanup(){
         if(denominator == 0){
             throw std::invalid_argument("Denominator cannot have has value equal to 0!\n");
+            return;
+        }
+
+        if(numerator == 0){
+            denominator = 1;
             return;
         }
         
