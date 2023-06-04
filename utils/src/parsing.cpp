@@ -4,12 +4,11 @@
 
 namespace Parsing{
 
-
-        LinAlg::Rational str_to_rational(const std::string& str){
-            ShuntingYard shunt(str);
-            shunt.compute();
-            return shunt.getResult();
-        }
+    LinAlg::Rational str_to_rational(const std::string& str){
+        ShuntingYard shunt(str);
+        shunt.compute();
+        return shunt.getResult();
+    }
 
     const std::string  brackets = "()";
     const std::string  ops = "+-*/";
@@ -25,7 +24,7 @@ namespace Parsing{
                 expr.erase(it);
         }
 
-        if(is_valid_mstr(expr)){
+        //if(is_valid_mstr(expr)){
             std::string temp;
             std::string::iterator it = expr.begin();
             while(it < expr.end()){
@@ -34,14 +33,20 @@ namespace Parsing{
                         if(it == expr.begin() || is_operator(*(it - 1))){ //if '-' is unary minus and not subtraction
                             temp.push_back(*it);
                             it++;
+                            while(is_numchar(*it) && it < expr.end()){ //put decimal numbers into one token
+                                temp.push_back(*it);
+                                ++it;
+                            }
                         }
+                    }else{
+                        temp.push_back(*it);
+                        ++it;
                     }
-                    temp.push_back(*it);
                     input.push_back(temp);
                     temp.erase();
-                    ++it;
+                    
                 }else{
-                    while(nums.find(*it) != std::string::npos && it < expr.end()){ //put decimal numbers into one token
+                    while(is_numchar(*it) && it < expr.end()){ //put decimal numbers into one token
                         temp.push_back(*it);
                         ++it;
                     }
@@ -49,8 +54,8 @@ namespace Parsing{
                     temp.erase();
                 }
             }
-        }
-        else throw std::invalid_argument("Invalid argument to parsing constructor\n");
+        //}
+        //else throw std::invalid_argument("Invalid argument to parsing constructor\n");
     }
 
 
@@ -73,7 +78,7 @@ namespace Parsing{
     }
 
     
-    bool ShuntingYard::is_valid_mstr(std::string& str){
+    /*bool ShuntingYard::is_valid_mstr(std::string& str){
         //check validity
         for(char& c : str){
             if(symbols.find(c) == std::string::npos){ //if this char is not in list of valid symbols
@@ -86,8 +91,8 @@ namespace Parsing{
                 if(i == str.length() - 1){ //check these conditions first to avoid out of bounds array access; checks mismatched operators
                     return false;
                 }
-                if(is_operator(str[i - 1]) || is_operator(str[i + 1])){ //check mismatched operators
-                    return false;
+                if((is_operator(str[i - 1]) && str[i] != '-') || (is_operator(str[i + 1]) && str[i] != '-')){ //check mismatched operators
+                    return false; //if an operator is seen: if an operator is adjacent:
                 }
             }
             if(is_bracket(str[i]) && match_bracket(str, i) == std::string::npos){ //check mismatched brackets
@@ -95,6 +100,10 @@ namespace Parsing{
             }
         }
         return true;
+    }*/
+
+    bool ShuntingYard::is_numchar(char& c){
+        return nums.find(c) != std::string::npos;
     }
 
     bool ShuntingYard::is_operator(char& c){
@@ -236,7 +245,7 @@ namespace Parsing{
     }
 
     
-
+/*
     size_t match_bracket(std::string& str, size_t index){ //assumes bracket parity is given
         
         size_t brackets = 1; //first bracket already counted
@@ -271,5 +280,5 @@ namespace Parsing{
             index = match_bracket(str, index); //jump to paired closing bracket
         }
         return res;
-    }
+    }*/
 }

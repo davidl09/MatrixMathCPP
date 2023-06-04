@@ -35,5 +35,5 @@ int main(){
 /*
 TODO:
     - Change Rational() constructor taking 2 doubles as input
-    - Change Shunt class to support parsing as method, not constructor
+    - Change Shunt class to support parsing as method, not constructor (fixed with wrapper method)
 */
