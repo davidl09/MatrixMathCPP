@@ -3,7 +3,7 @@
 #include "tests.hpp"
 
 int main(){
-
+    
     std::string temp;
     LinAlg::Rational num;
     while(true){
