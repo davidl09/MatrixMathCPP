@@ -1,9 +1,29 @@
 #include "rational.hpp"
 #include "parsing.hpp"
+#include "matrix.hpp"
 #include "tests.hpp"
 
 int main(){
-    
+
+    LinAlg::Matrix a(3, 5);
+    std::cout << a[0][0].tostr() << std::endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
     std::string temp;
     LinAlg::Rational num;
     while(true){
