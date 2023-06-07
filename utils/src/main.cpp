@@ -3,27 +3,21 @@
 #include "matrix.hpp"
 #include "tests.hpp"
 
+using namespace LinAlg;
+
 int main(){
-
-    LinAlg::Matrix a(3, 5);
-    std::cout << a[0][0].tostr() << std::endl;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    Matrix<Rational> b(2, 2);
+    b.populate();
+    b.print();
+    
     /*
+    Matrix<Rational> a(2, 2);
+    a.print();
+    a.populate();
+    a.print();
+
+    
     std::string temp;
     LinAlg::Rational num;
     while(true){
@@ -38,8 +32,6 @@ int main(){
         }
     }
 
-
-    /*
     Tests::Constructors();
     Tests::Parsing();
     Tests::DecimalParsing(); // all tests passed

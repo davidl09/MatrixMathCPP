@@ -65,6 +65,11 @@ namespace LinAlg{
         cleanup();
     }
 
+    Rational::Rational(int n){
+        this->numerator = n;
+        this->denominator = 1;
+    }
+
     Rational::Rational(double n, double d){ //works, needs more testing
         Rational a(n), b(d);        //--> constructor for Rational from single double retains accuracy (no truncation)
 
@@ -96,8 +101,14 @@ namespace LinAlg{
         this->cleanup();
     }  
 
-    Rational::Rational(std::string str){
+    Rational::Rational(std::string& str){
         Parsing::ShuntingYard shunt(str);
+        shunt.compute();
+        *this = shunt.getResult();
+    }
+
+    void Rational::set_value(std::string& expr){
+        Parsing::ShuntingYard shunt(expr);
         shunt.compute();
         *this = shunt.getResult();
     }
@@ -137,6 +148,19 @@ namespace LinAlg{
         denominator /= gfact;
         return;
     }
+
+    std::istream& operator >> (std::istream& in, Rational& r){
+        std::string temp;
+        std::cin >> temp;
+        r.set_value(temp);
+        return in;
+    }
+
+    std::ostream& operator << (std::ostream& out , Rational& r){
+        std::cout << r.tostr();
+        return out;
+    }
+
 
     std::string Rational::tostr(){
         return std::to_string(numerator) + (denominator == 1 ? "" : ("/" + std::to_string(denominator)));
@@ -220,7 +244,7 @@ namespace LinAlg{
     }
 
     Rational Rational::operator/(long a){
-        return Rational((int)(this->numerator, this->numerator * a));
+        return Rational(this->numerator, (int)(this->numerator * a));
     }
 
     Rational& Rational::operator/=(Rational a){
