@@ -6,9 +6,10 @@
 using namespace LinAlg;
 
 int main(){
-    Rational a(3, 4);
-    Matrix<int> b(2, 3);
-    std::cout << a << std::endl;
+    
+    Matrix<Rational> b(2, 2);
+    b.populate();
+    b.print();
     
     /*
     Matrix<Rational> a(2, 2);

@@ -48,9 +48,8 @@ namespace LinAlg{
                     for (size_t j = 0; j < num_columns; j++)
                     {
                         std::cout << "Enter a value to set column " << j << ", row " << i << "\n";
-                        std::cin << matrix[i][j];
+                        std::cin >> matrix[i][j];
                     }
-                    
                 }
                 std::cout << std::endl;
             }
@@ -60,8 +59,9 @@ namespace LinAlg{
                     for(auto val : row){
                         std::cout << val << "  ";
                     }
-
+                    std::cout << "\n";
                 }
+                std::cout << std::endl;
             }
 
             
@@ -84,4 +84,3 @@ namespace LinAlg{
 }
 
 #endif
-   
