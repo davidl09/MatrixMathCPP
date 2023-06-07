@@ -3,7 +3,7 @@
 
 namespace LinAlg{
 
-    Matrix::Matrix(size_t rows, size_t columns){
+    Matrix::Matrix(const size_t rows, const size_t columns){
         this->num_rows = rows;
         this->num_columns = columns;
 
@@ -12,7 +12,7 @@ namespace LinAlg{
         {
             matrix.push_back(std::vector<Rational>());
             matrix[i].reserve(num_columns);
-            
+
             for (int j = 0; j < columns; j++)
             {
                 this->matrix[i].push_back(Rational());

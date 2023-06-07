@@ -13,8 +13,8 @@ namespace LinAlg{
             std::vector<Rational>& operator[](size_t row);
             
         private:
-            size_t num_rows;
-            size_t num_columns;
+            const size_t num_rows;
+            const size_t num_columns;
             std::vector<std::vector<Rational>> matrix;
     };
 }
