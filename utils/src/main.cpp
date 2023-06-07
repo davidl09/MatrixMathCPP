@@ -6,17 +6,17 @@
 using namespace LinAlg;
 
 int main(){
-
-
-    Matrix<Rational> a(3, 3);
-
-
-
-
-
-
-
+    Rational a(3, 4);
+    Matrix<int> b(2, 3);
+    std::cout << a << std::endl;
+    
     /*
+    Matrix<Rational> a(2, 2);
+    a.print();
+    a.populate();
+    a.print();
+
+    
     std::string temp;
     LinAlg::Rational num;
     while(true){

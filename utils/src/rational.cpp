@@ -101,13 +101,13 @@ namespace LinAlg{
         this->cleanup();
     }  
 
-    Rational::Rational(std::string str){
+    Rational::Rational(std::string& str){
         Parsing::ShuntingYard shunt(str);
         shunt.compute();
         *this = shunt.getResult();
     }
 
-    void Rational::set_value(std::string expr){
+    void Rational::set_value(std::string& expr){
         Parsing::ShuntingYard shunt(expr);
         shunt.compute();
         *this = shunt.getResult();
