@@ -6,16 +6,21 @@
 #include "rational.hpp"
 
 namespace LinAlg{
+
+    template<typename T>
     class Matrix{
         public:
-            Matrix(size_t rows, size_t columns);
+            Matrix(const size_t rows, const size_t columns); //Constructor initializes all entries to 0
             Rational at(size_t row, size_t column);
-            std::vector<Rational>& operator[](size_t row);
+            std::vector<T>& operator[](size_t row);
+            void populate();
+            void print();
             
         private:
             size_t num_rows;
             size_t num_columns;
-            std::vector<std::vector<Rational>> matrix;
+            void set_at(T value, size_t row, size_t column);
+            std::vector< std::vector< T > > matrix;
     };
 }
 

@@ -3,19 +3,12 @@
 #include "matrix.hpp"
 #include "tests.hpp"
 
+using namespace LinAlg;
+
 int main(){
 
-    LinAlg::Matrix a(3, 5);
-    std::cout << a[0][0].tostr() << std::endl;
 
-
-
-
-
-
-
-
-
+    Matrix<Rational> a(3, 3);
 
 
 
@@ -38,8 +31,6 @@ int main(){
         }
     }
 
-
-    /*
     Tests::Constructors();
     Tests::Parsing();
     Tests::DecimalParsing(); // all tests passed
