@@ -64,20 +64,23 @@ namespace LinAlg{
                 std::cout << std::endl;
             }
 
-            
-        private:
-            size_t num_rows;
-            size_t num_columns;
-
-            std::vector< std::vector< T > > matrix;
-
-            
             void set_at(T value, size_t row, size_t column){
                 if(row >= num_rows || column >= num_columns){
                     throw std::invalid_argument("Out of bounds value set on matrix \n");
                 }
                 matrix[row][column] = value;
             }
+
+            Matrix<T>& operator+(Matrix<T>& newmat){
+                
+            }
+
+            
+        private:
+            size_t num_rows;
+            size_t num_columns;
+
+            std::vector< std::vector< T > > matrix;
 
     };
 

@@ -65,8 +65,8 @@ namespace LinAlg{
         cleanup();
     }
 
-    Rational::Rational(int n){
-        this->numerator = n;
+    Rational::Rational(int a){
+        this->numerator = a;
         this->denominator = 1;
     }
 
@@ -75,20 +75,7 @@ namespace LinAlg{
 
         a /= b; //Rational /= retains accuracy
         *this = a;
-        /***               
-        double r = n/d;
-        long long num, den;          //<-- gives inaccurate results
-        long gcd;
-        num = std::round(r * 1e5);
-        den = std::round(1e5);
-        while(num%10 == 0){
-            num/=10;
-            den/=10;
-        }
-        gcd = gcf(num, den);
-        numerator = num/gcd;
-        denominator = den/gcd;
-        */
+        
     }
 
     Rational::Rational(double r){
@@ -198,7 +185,9 @@ namespace LinAlg{
     }
 
     Rational Rational::operator-(Rational a){
-        return Rational((int)(this->numerator * a.denominator - a.numerator * this->denominator), (int)(a.denominator * this->denominator));
+        Rational temp((int)(this->numerator * a.denominator - a.numerator * this->denominator), (int)(a.denominator * this->denominator));
+        temp.cleanup();
+        return temp;
     }
         
     Rational Rational::operator-(long a){
@@ -259,6 +248,31 @@ namespace LinAlg{
         this->cleanup();
         return *this;
     }
+
+    bool Rational::operator>(Rational& a){
+        return (*this - a).numerator > 0;
+    }
+
+    bool Rational::operator>(long& a){
+        return (*this - a).numerator > 0;
+    }
+
+    bool Rational::operator<(Rational& a){
+        return (*this - a).numerator < 0;
+    }
+
+    bool Rational::operator<(long& a){
+        return (*this - a).numerator < 0;
+    }
+
+    bool Rational::operator==(Rational& a){
+        return (*this - a).numerator == 0;
+    }
+
+    bool Rational::operator==(long& a){
+        return this->numerator == a * this->denominator;
+    }
+
 
 
     void Rational::invert(){

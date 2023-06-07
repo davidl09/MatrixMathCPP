@@ -6,18 +6,13 @@
 using namespace LinAlg;
 
 int main(){
-    
-    Matrix<Rational> b(2, 2);
-    b.populate();
-    b.print();
+
+    Rational a;
+    a = Parsing::str_to_rational("2^3^2");
+
+    std::cout << a << std::endl;
     
     /*
-    Matrix<Rational> a(2, 2);
-    a.print();
-    a.populate();
-    a.print();
-
-    
     std::string temp;
     LinAlg::Rational num;
     while(true){
@@ -43,9 +38,3 @@ int main(){
         std::cout << "Result: " << shunt.tostr() << "Approximation: " << shunt.approx() << std::endl;
     }*/
 }
-
-/*
-TODO:
-    - Change Rational() constructor taking 2 doubles as input
-    - Change Shunt class to support parsing as method, not constructor (fixed with wrapper method)
-*/

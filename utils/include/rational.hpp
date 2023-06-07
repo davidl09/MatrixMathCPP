@@ -15,7 +15,7 @@ namespace LinAlg{
     class Rational{
         
         public:
-            Rational(int n);
+            Rational(int a);
             Rational(int n, int d);
             Rational(double n, double d);
             Rational(double r);
@@ -37,6 +37,13 @@ namespace LinAlg{
             Rational& operator*=(long a);
             Rational& operator/=(Rational a);
             Rational& operator/=(long a);
+
+            bool operator>(Rational& a);
+            bool operator>(long& a);
+            bool operator<(Rational& a);
+            bool operator<(long& a);
+            bool operator==(Rational& a);
+            bool operator==(long& a);
 
             Rational inverse();
             long int numer();

@@ -11,18 +11,22 @@ namespace Parsing{
     }
 
     const std::string  brackets = "()";
-    const std::string  ops = "+-*/";
+    const std::string  ops = "+-*/^";
     const std::string nums = "0123456789.";
-    const std::string symbols("0123456789+-*/.()");
+    const std::string symbols("0123456789+-*/^.()");
+    const std::string r_associate("^");
 
     ShuntingYard::ShuntingYard(std::string expr){
         if(expr.length() == 0)
-            throw std::invalid_argument("Empty argument to parsing constructor\n");
+            throw std::invalid_argument("Empty argument to parser\n");
 
         for(auto it = expr.begin(); it < expr.end(); ++it){
             if(*it == ' ')
                 expr.erase(it);
         }
+
+        if(!is_valid_mstr(expr))
+            throw std::invalid_argument("Malformed input string to parser\n");
 
         //if(is_valid_mstr(expr)){
             std::string temp;
@@ -59,13 +63,15 @@ namespace Parsing{
     }
 
 
-    int op_prec(std::string str){ //numbers: 0, +-: 1,  */: 2, (): 3,
+    int op_prec(std::string str){ //numbers: 0, +-: 1,  */: 2, ^: 3
         switch (str.length()) {
             case 1:
                 if(str[0] == ops[0] || str[0] == ops[1])
                     return 1;
                 if(str[0] == ops[2] || str[0] == ops[3])
                     return 2;
+                if(str[0] == ops[4])
+                    return 3;
                 if(ShuntingYard::is_bracket(str[0]))
                     return 0;
             default:
@@ -78,7 +84,7 @@ namespace Parsing{
     }
 
     
-    /*bool ShuntingYard::is_valid_mstr(std::string& str){
+    bool ShuntingYard::is_valid_mstr(std::string& str){
         //check validity
         for(char& c : str){
             if(symbols.find(c) == std::string::npos){ //if this char is not in list of valid symbols
@@ -87,20 +93,20 @@ namespace Parsing{
         }
 
         for(int i = 0; i < str.length(); ++i){
-            if(is_operator(str[i])){
+            /*if(is_operator(str[i])){
                 if(i == str.length() - 1){ //check these conditions first to avoid out of bounds array access; checks mismatched operators
                     return false;
                 }
                 if((is_operator(str[i - 1]) && str[i] != '-') || (is_operator(str[i + 1]) && str[i] != '-')){ //check mismatched operators
                     return false; //if an operator is seen: if an operator is adjacent:
                 }
-            }
+            }*/
             if(is_bracket(str[i]) && match_bracket(str, i) == std::string::npos){ //check mismatched brackets
                 return false;
             }
         }
         return true;
-    }*/
+    }
 
     bool ShuntingYard::is_numchar(char& c){
         return nums.find(c) != std::string::npos;
@@ -112,6 +118,10 @@ namespace Parsing{
 
     bool ShuntingYard::is_bracket(char& c){
         return c == '(' || c == ')';
+    }
+
+    bool right_associate(std::string& str){
+        return r_associate.find(str) != std::string::npos;
     }
 
     void ShuntingYard::compute(){
@@ -145,6 +155,10 @@ namespace Parsing{
             else if(retval.size() >= 2){ 
 
                 switch((*it)[0]){
+                    case '^':
+                        retval[retval.size() - 2] = LinAlg::Rational(std::pow(retval[retval.size() - 2].approx(), retval.back().approx()));
+                        retval.pop_back();
+                        break;
                     case '/':
                         retval[retval.size() - 2] /= retval[retval.size() - 1];
                         retval.pop_back(); 
@@ -194,7 +208,11 @@ namespace Parsing{
         if(str.length() == 0){
             throw std::invalid_argument("Empty string passed to shunting yard algorithm\n");
         }if(ShuntingYard::is_operator(str.back())){
-            while(!is_empty() && ShuntingYard::is_operator(stack.back()[0]) && op_prec(stack.back()) >= op_prec(str)){
+            while(!is_empty() && ShuntingYard::is_operator(stack.back()[0]) && 
+                        (
+                            (op_prec(stack.back()) > op_prec(str)) || 
+                            (op_prec(stack.back()) >= op_prec(str) && !right_associate(str))
+                        )){
                 output.push_back(stack.back());
                 stack.pop_back();
             }
@@ -245,7 +263,7 @@ namespace Parsing{
     }
 
     
-/*
+
     size_t match_bracket(std::string& str, size_t index){ //assumes bracket parity is given
         
         size_t brackets = 1; //first bracket already counted
@@ -267,7 +285,7 @@ namespace Parsing{
         }
         return std::string::npos;
     }
-
+    /*
     std::vector<size_t> open_bracket_groups(std::string& str){ //assumes bracket parity is given
         size_t index = 0;
         std::vector<size_t> res;
