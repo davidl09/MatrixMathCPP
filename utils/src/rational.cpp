@@ -21,7 +21,7 @@ namespace LinAlg{
         return res;
     }
 
-    bool isprime(long a){
+    bool isprime(int a){
         if(prime_fact(a).size() == 1)
             return true;
         return false;
@@ -100,6 +100,17 @@ namespace LinAlg{
         *this = shunt.getResult();
     }
 
+    void Rational::set_value(int a){
+        this->denominator = 1;
+        this->numerator = a;
+    }
+
+    void Rational::set_value(double a){
+        this->numerator = std::round(a * 1e5);
+        this->denominator = std::round(1e5);
+        this->cleanup();
+    }
+
     long int Rational::numer(){
         return numerator;
     }
@@ -161,7 +172,7 @@ namespace LinAlg{
         return Rational((int)(this->numerator * a.denominator + a.numerator * this->denominator), (int)(a.denominator * this->denominator));
     }
 
-    Rational Rational::operator+(long a){
+    Rational Rational::operator+(int a){
         return Rational((int)(this->numerator + a * this->denominator), this->denominator);
     }
 
@@ -178,7 +189,7 @@ namespace LinAlg{
         return *this;
     }
 
-    Rational& Rational::operator+=(long a){
+    Rational& Rational::operator+=(int a){
         this->numerator += a * this->denominator;
         this->cleanup();
         return *this;
@@ -190,7 +201,7 @@ namespace LinAlg{
         return temp;
     }
         
-    Rational Rational::operator-(long a){
+    Rational Rational::operator-(int a){
         return Rational((int)(this->numerator - a * this->denominator), this->denominator);
     }
 
@@ -211,7 +222,7 @@ namespace LinAlg{
         return Rational((int)(this->numerator * a.numer()), (int)(this->denominator * a.denom()));
     }
 
-    Rational Rational::operator*(long a){
+    Rational Rational::operator*(int a){
         return Rational(int(this->numerator * a), this->denominator);
     }
 
@@ -222,7 +233,7 @@ namespace LinAlg{
         return *this;
     }
 
-    Rational& Rational::operator*=(long a){
+    Rational& Rational::operator*=(int a){
         this->numerator *= a;
         this->cleanup();
         return *this;
@@ -232,7 +243,7 @@ namespace LinAlg{
         return Rational((int)(this->numerator * a.denominator), this -> denominator * a.numerator);
     }
 
-    Rational Rational::operator/(long a){
+    Rational Rational::operator/(int a){
         return Rational(this->numerator, (int)(this->numerator * a));
     }
 
@@ -243,25 +254,48 @@ namespace LinAlg{
         return *this;
     }
 
-    Rational& Rational::operator/=(long a){
+    Rational& Rational::operator/=(int a){
         this->denominator *= a;
         this->cleanup();
         return *this;
+    }
+
+    Rational Rational::operator^(Rational a){
+        Rational temp = *this;
+
+        if(a.denominator == 1){
+            for(int i = 0; i < a.numerator; ++i){
+                temp.numerator *= a.numerator;
+            }
+            temp.cleanup();
+            return temp;
+        }
+
+        temp.set_value(std::pow(this->approx(), a.approx()));
+        return temp;
     }
 
     bool Rational::operator>(Rational& a){
         return (*this - a).numerator > 0;
     }
 
-    bool Rational::operator>(long& a){
+    bool Rational::operator>(int& a){
         return (*this - a).numerator > 0;
+    }
+
+    bool Rational::operator>(int a){
+        return(*this - a).numerator > 0;
     }
 
     bool Rational::operator<(Rational& a){
         return (*this - a).numerator < 0;
     }
 
-    bool Rational::operator<(long& a){
+    bool Rational::operator<(int& a){
+        return (*this - a).numerator < 0;
+    }
+
+    bool Rational::operator<(int a){
         return (*this - a).numerator < 0;
     }
 
@@ -269,8 +303,24 @@ namespace LinAlg{
         return (*this - a).numerator == 0;
     }
 
-    bool Rational::operator==(long& a){
+    bool Rational::operator==(int& a){
         return this->numerator == a * this->denominator;
+    }
+
+    bool Rational::operator==(int a){
+        return this->numerator == a * this->denominator;
+    }
+
+    bool Rational::operator!=(Rational& a){
+        return !(*this == a);
+    }
+
+    bool Rational::operator!=(int& a){
+        return !(this->denominator == 1 && this->numerator == a);
+    }
+
+    bool Rational::operator!=(int a){
+        return !(this->denominator == 1 && this->numerator == a);
     }
 
 

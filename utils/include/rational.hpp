@@ -22,28 +22,37 @@ namespace LinAlg{
             Rational(std::string& str);
             Rational();
             Rational operator+(Rational a);
-            Rational operator+(long a);
+            Rational operator+(int a);
             Rational operator-(Rational a);
-            Rational operator-(long a);
+            Rational operator-(int a);
             Rational operator*(Rational a);
-            Rational operator*(long a);
+            Rational operator*(int a);
             Rational operator/(Rational a);
-            Rational operator/(long a);
+            Rational operator/(int a);
             Rational& operator+=(Rational a);
-            Rational& operator+=(long a);
+            Rational& operator+=(int a);
             Rational& operator -=(Rational a);
-            Rational& operator -=(long a);
+            Rational& operator -=(int a);
             Rational& operator*=(Rational a);
-            Rational& operator*=(long a);
+            Rational& operator*=(int a);
             Rational& operator/=(Rational a);
-            Rational& operator/=(long a);
+            Rational& operator/=(int a);
+            Rational operator^(Rational a);
+            
 
             bool operator>(Rational& a);
-            bool operator>(long& a);
+            bool operator>(int& a);
+            bool operator>(int a);
             bool operator<(Rational& a);
-            bool operator<(long& a);
+            bool operator<(int& a);
+            bool operator<(int a);
             bool operator==(Rational& a);
-            bool operator==(long& a);
+            bool operator==(int& a);
+            bool operator==(int a);
+            bool operator!=(Rational& a);
+            bool operator!=(int& a);
+            bool operator!=(int a);
+
 
             Rational inverse();
             long int numer();
@@ -51,6 +60,8 @@ namespace LinAlg{
             std::string tostr();
             double approx();
             void invert();
+            void set_value(int a);
+            void set_value(double a);
             void set_value(std::string& expr);
 
             friend std::istream& operator >> (std::istream& in, Rational& r);// IO functions
@@ -62,7 +73,7 @@ namespace LinAlg{
             long long denominator;
     };
 
-    bool isprime(long a);
+    bool isprime(int a);
     std::vector<long int> prime_fact(long int a);
     long int gcf(int a, int b);
 }
