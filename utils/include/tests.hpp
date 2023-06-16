@@ -1,5 +1,4 @@
-#include "rational.hpp"
-#include "parsing.hpp"
+#include "ClassRational_HPP/rational.hpp"
 
 namespace Tests{
     void Constructors();

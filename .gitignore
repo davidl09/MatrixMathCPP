@@ -4,6 +4,7 @@ build/
 *.cmake
 CMakeFiles/
 bin/
+ClassRational_HPP/
 
 # Prerequisites
 *.d

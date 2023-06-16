@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "rational.hpp"
+#include "ClassRational_HPP/rational.hpp"
 
 namespace LinAlg{
 

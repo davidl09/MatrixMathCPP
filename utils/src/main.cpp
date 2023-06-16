@@ -1,5 +1,4 @@
-#include "rational.hpp"
-#include "parsing.hpp"
+#include "ClassRational_HPP/rational.hpp"
 #include "matrix.hpp"
 #include "tests.hpp"
 
@@ -13,7 +12,7 @@ int main(){
         try{
             std::cout << "Type in an expression to evaluate\n";
             std::getline(std::cin, temp);
-            num = Parsing::str_to_rational(temp);
+            num = Parsing::parse_mstring<Rational>(temp);
             std::cout << temp << " = " << num << " , or approx. " << num.approx() << "\n";
         }
         catch(...){
